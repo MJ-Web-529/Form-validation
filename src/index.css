@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main {
+  background-color: bisque;
+  width: 50vw;
+  margin: 0 auto;
+  margin-top: 80px;
+  border-radius: 10px;
+}
+
+.input {
+  border: aqua 2px solid;
+  height: 40px;
+  border-radius: 25px;
+  width: 45vw;
+  padding-left: 1cm;
+  margin: 5px;
+}
+
+button {
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 0 18rem;
+}
+
+li {
+  padding: 23px;
+}
+
+a li {
+  color: aliceblue;
+  list-style: none;
+}
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.justify-around {
+  padding: 10px;
+}
+.country {
+  margin-left: 15px;
+  border-radius: 10px;
+}
+
+
+
+/* For dob css */
+.form {
+    display: "flex";
+    flex-direction: column;
+    align-items: center;
+    gap: "10px";
+    margin: "20px";
+  }
+.label {
+  font-size: "18px";
+}
+.dob-input {
+  padding: "8px";
+  font-size: "16px";
+  margin-left: 15px;
+  border-radius: 10px;
+}
+.button {
+  padding: "8px 16px";
+  font-size: "16px";
+  cursor: "pointer";
+  background-color: "#4CAF50";
+  color: "white";
+  border: "none";
+  border-radius: "4px";
+}
+
+.a{
+  gap: 20px;
+}
+
+/* login page CSS */
+/* .login-div{
+  border: 2px solid black;
+  border-radius: 20px;
+  margin: 10vh 40vw;
+  width: 100mm;
+  height: 100mm;
+  position: relative;
+}
+
+label{
+  margin: 10vw;
+  font-size: 7mm;
+}
+
+.login-text{
+  border: 2px solid black;
+  border-radius: 5px;
+  margin-left: 20px;
+  display: block;
+  padding-left: 15px;
+  height: 50px;
+  margin-top: 60px;
+  gap: 20px;
+}
+
+button{
+  display: block;
+  padding: 5px;
+} */
