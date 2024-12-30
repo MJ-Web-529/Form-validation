@@ -1,221 +1,281 @@
 import React, { useState } from "react";
-import {validEmail,validFname,validMno,validPassword,validUsername} from "./Regex";
+import { validEmail, validFname,validMno, validPassword, validUsername } from "./Regex";
 
 const App = () => {
-  const [fname, setFname] = useState("");
-  const [fErr, setFerr] = useState(false);
 
-  const [userName, setuserName] = useState("");
-  const [uErr, setUErr] = useState(false);
+  const [input, setInput] = useState({
+    fname: "",
+    userName: "",
+    email: "",
+    password: "",
+    rePassword: "",
+    mobile: "",
+    country: "",
+    gender: "",
+    birthday: "",
+  });
 
-  const [email, setEmail] = useState("");
-  const [emailErr, setEmailErr] = useState(false);
-
-  const [password, setPassword] = useState("");
-  const [passwordErr, setPasswordErr] = useState(false);
-
-  const [rpwd, setRpwd] = useState("");
-  const [rErr, setrErr] = useState(false);
-
-  const [mo, setMo] = useState("");
-  const [moerr, setMoerr] = useState(false);
-
-  const [country, setCountry] = useState("");
-
-  const [gender, setGender] = useState("");
-
-  const [birthday, setBirthday] = useState("");
+   
+  const [inputErr, setInputErr] = useState({
+    fnameErr: false,
+    userNameErr: false,
+    userNameExist: false,
+    userEmailExist: false,
+    userMobileExist: false,
+    emailErr: false,
+    passwordErr: false,
+    rePasswordErr: false,
+    mobileErr: false,
+    countryErr: false,
+    genderErr: false,
+    birthdayErr: false,
+  });
 
   const handleChange = (e) => {
-    setBirthday(e.target.value);
+    const { name, value } = e.target;
+
+    if (name == "fname" && !validFname.test(value)) {
+      return;
+    }
+
+    if (name == "userName" && !validUsername.test(value)) {
+      return;
+    }
+
+    if (name == "password" && !validPassword.test(value)) {
+      return;
+    }
+    if (name == "rePassword" && !validPassword.test(value)) {
+      return;
+    }
+
+    if (name == "mobile" && !validMno.test(value)) {
+      return;
+    }
+
+    setInput({ ...input, [name]: value });
+    setInputErr({ ...input, [name]: false });
   };
 
-  const handleFnameChange = (e) => {
-    const inputValue = e.target.value;
-    const validFname = inputValue.replace(/[^a-z A-Z]/g, "");
-    setFname(validFname);
-    setFerr(false);
-  };
-
-  const handleUserChange = (e) => {
-    const inputValue = e.target.value;
-    const validUserName = inputValue.replace(/[^a-z_0-9]/g, "");
-    setuserName(validUserName);
-    setUErr(false);
-  };
-
-  const handleEmailChange = (e) => {
-    const inputValue = e.target.value;
-    const validEmail = inputValue.replace(
-      /[^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-z]$/g,
-      ""
-    );
-    setEmail(validEmail);
-    setEmailErr(false);
-  };
-
-  const handleCountryChange = (event) => {
-    setCountry(event.target.value);
-  };
-  const setGenderhandler = (event) => {
-    setGender(event.target.value);
-  };
-
-  const UserDetails = {fname,userName,email,password,rpwd,mo,country,gender,birthday,};
-
-  const validate = () => {
-    if (!validFname.test(fname)) {
-      setFerr(true);
+  const handleSubmit = (e) => {
+    if (input.fname.length === 0) {
+      setInputErr((e) => ({ ...e, fnameErr: true }));
       return;
     }
-
-    if (!validUsername.test(userName)) {
-      setUErr(true);
+    if (input.userName.length === 0 || !validUsername.test(input.userName)) {
+      setInputErr((e) => ({ ...e, userNameErr: true }));
       return;
     }
-
-    if (!validEmail.test(email)) {
-      setEmailErr(true);
+    if (input.email.length === 0 || !validEmail.test(input.email)) {
+      setInputErr((e) => ({ ...e, emailErr: true }));
       return;
     }
-
-    if (!validPassword.test(password)) {
-      setPasswordErr(true);
+    if (input.password.length === 0) {
+      setInputErr((e) => ({ ...e, passwordErr: true }));
       return;
     }
-
-    if (password !== rpwd) {
-      setrErr(true);
+    if (input.rePassword.length === 0) {
+      setInputErr((e) => ({ ...e, rePasswordErr: true }));
       return;
     }
-
-    if (!validMno.test(mo)) {
-      setMoerr(true);
+    
+    if (input.password != input.rePassword) {
+      setInputErr((e) => ({ ...e, rePasswordErr: true }))
+      return
+    }
+    if (input.mobile.length === 0 || !validMno.test(input.mobile)) {
+      setInputErr((e) => ({ ...e, mobileErr: true }));
       return;
     }
-
-    if (!country) {
-      alert("Please select your gender!");
+    if (input.country === "") {
+      setInputErr((e) => ({ ...e, countryErr: true }));
       return;
     }
-
-    if (!gender) {
-      alert("Please select your gender!");
+    if (input.gender === "") {
+      setInputErr((e) => ({ ...e, genderErr: true }));
       return;
     }
-
-    if (!birthday) {
-      alert("Please select your birthday!");
+    if (input.birthday === "") {
+      setInputErr((e) => ({ ...e, birthdayErr: true }));
       return;
-    } else alert(`Your birthday is: ${birthday}`);
-    let getData = JSON.parse(localStorage.getItem("Data")) || [];
-    getData.push(UserDetails);
+    }
+  
+  let getData = JSON.parse(localStorage.getItem("loginData")) || [];
+  const userNameChecker = getData.map((e) => e.userName);
+  const emailChecker = getData.map((e) => e.email);
+  const mobileChecker = getData.map((e) => e.mobile);
+
+  if (userNameChecker.includes(input.userName)) {
+    setInputErr((e) => ({ ...e, userNameExist: true }));
+    console.log("in")
+    return;
+  }
+  console.log("hello")
+  
+  if (emailChecker.includes(input.email)) {
+    setInputErr((e) => ({ ...e, userEmailExist: true }));
+    return;
+  }
+
+  if (mobileChecker.includes(input.mobile)) {
+    setInputErr((e) => ({ ...e, userMobileExist: true }));
+    return;
+    }
+
+  // let getData = JSON.parse(localStorage.getItem("loginData")) || [];
+    getData.push(input);
     localStorage.setItem("loginData", JSON.stringify(getData));
+    
+    setInput((e) => ({
+      ...e,
+      fname: "",
+      userName: "",
+      email: "",
+      password: "",
+      rePassword: "",
+      mobile: "",
+      country: "",
+      gender: " ",
+      birthday: "",
+    }));
   };
-
+  
   return (
-    <div className="  p-5 main grid">
-      <input className="input"type="text"placeholder="Enter Full Name"value={fname}onChange={handleFnameChange}
-        onBlur={() => {
-          if (fname.length === 0) {
-            setFerr(true);
-          }
-        }}
-      />
-      {fErr && <p>Name format is invalid</p>}
-      <input className="input"type="text"placeholder="what we call you"value={userName}onChange={handleUserChange}
-        onBlur={() => {
-          if (userName.length === 0) {
-            setUErr(true);
-          }
-        }}
-      />
-      {uErr && <p>Name format is invalid</p>}
-      <input className="input"type="email"placeholder="Email id"value={email}onChange={handleEmailChange}
-        onBlur={() => {
-          if (email.length === 0) {
-            setEmailErr(true);
-          }
-        }}
-      />
-      {emailErr && <p>Email format is invalid</p>}
+    <div className="p-5 main grid">
       <input
-        className={`input ${passwordErr ? "red-border" : "blue-border"}`}
-        type="text"placeholder="password"value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-          setPasswordErr(false);
-        }}
-        onBlur={() => {
-          if (password.length === 0) {
-            setPasswordErr(true);
-          }
-        }}
+        className="input"
+        type="text"
+        placeholder="Enter Full Name"
+        name="fname"
+        value={input.fname}
+        onChange={handleChange}
       />
-      {passwordErr && <p>Password format is invalid</p>}
-      <input className="input"type="text"placeholder="re-password"value={rpwd}
-        onChange={(e) => {
-          setRpwd(e.target.value);
-          setrErr(false);
-        }}
-        onBlur={() => {
-          if (rpwd.length === 0) {
-            setrErr(true);
-          }
-        }}
+      {inputErr.fnameErr && <p>Name format is invalid</p>}
+      <input
+        className="input"
+        type="text"
+        name="userName"
+        placeholder="what we call you"
+        value={input.userName}
+        onChange={handleChange}
       />
-      {rErr && <p>Password is not match</p>}
-      <input className="input"type="number"placeholder="Mobile Number"value={mo}
-        onChange={(e) => {
-          setMo(e.target.value);
-          setMoerr(false);
-        }}
-        onBlur={() => {
-          if (mo.length === 0) {
-            setMoerr(true);
-          }
-        }}
+      {inputErr.userNameErr && (
+        <p>
+          {input.userName.length == 0
+            ? "enter user name"
+            : "invalid userName"}
+        </p>
+      )}
+      {inputErr.userNameExist && <p>Already exist name</p>}
+      <input
+        className="input"
+        type="email"
+        name="email"
+        placeholder="Email id"
+        value={input.email}
+        onChange={handleChange}
       />
-      {moerr && <p>Mobile number is wrong</p>}
+      {inputErr.emailErr && (
+        <p>
+          {input.email.length == 0
+            ? "enter the email"
+            : "Email format is invalid"}
+        </p>
+      )}
+      {inputErr.userEmailExist && <p>Already exist</p>}
+
+      <input
+        className={`input`}
+        type="text"
+        name="password"
+        placeholder="password"
+        value={input.password}
+        onChange={handleChange}
+      />
+      {inputErr.passwordErr && <p>Password format is invalid</p>}
+      <input
+        className="input"
+        type="text"
+        placeholder="rePassword"
+        value={input.rePassword}
+        onChange={handleChange}
+        name="rePassword"
+      />
+      {inputErr.rePasswordErr && <p>Password is not match</p>}
+      <input
+        className="input"
+        type="number"
+        placeholder="Mobile Number"
+        value={input.mobile}
+        onChange={handleChange}
+        name="mobile"
+      />
+      {inputErr.mobileErr && (
+        <p>
+          {input.mobile.length == 0
+            ? "Enter mobile number"
+            : "Mobile number is wrong"}
+        </p>
+      )}
+      {inputErr.userMobileExist && <p>Already exist</p>}
 
       <label className="m-4 w-[25rem] flex">
         <h1 className="font-bold text-[#D4EBF8]">Choose a Country:</h1>
-        <select className="country"value={country}onChange={handleCountryChange}>
-          <option value="" disabled hidden>{" "} -Choose{" "}</option>
+        <select
+          className="country"
+          value={input.country}
+          onChange={handleChange}
+          name="country"
+        >
+          <option value="" disabled hidden>
+            Choose
+          </option>
           <option value="USA">USA</option>
           <option value="India">India</option>
           <option value="UK">UK</option>
           <option value="Indonesia">Indonesia</option>
         </select>
       </label>
+      {inputErr.countryErr && <p>Choose a country</p>}
 
       <div className=" flex m-4 w-[30rem]">
-        <label><h1 className="font-bold text-[#D4EBF8]">Choose gender: </h1></label>
-        <div onChange={(e) => setGenderhandler(e)} className="flex">
+        <label>
+          <h1 className="font-bold text-[#D4EBF8]">Choose gender: </h1>
+        </label>
+        <div onChange={handleChange} className="flex">
           <div className="mx-5">
-            <input className="a"type="radio"name="inlineRadioOptions"value="Male"/>
+            <input className="a" type="radio" value="Male" name="gender" />
             <label>Male</label>
           </div>
           <div className="mr-5">
-            <input className="a"type="radio"name="inlineRadioOptions"value="FeMale"/>
+            <input className="a" type="radio" value="FeMale" name="gender" />
             <label className="mr-[15px]">FeMale</label>
           </div>
           <div className="mr-5">
-            <input type="radio" className="a" name="inlineRadioOptions"value="Other"/>
+            <input type="radio" className="a" value="Other" name="gender" />
             <label>Other</label>
           </div>
         </div>
       </div>
+      {inputErr.genderErr && <p>Choose a gender</p>}
 
       {/*For DOB  */}
       <form className=" form m-4 w-[23rem]">
         <label className="flex">
           <h1 className="font-bold text-[#D4EBF8]">Enter your Birthday:</h1>
-          <input type="date" value={birthday} onChange={handleChange} className="dob-input"required/>
+          <input
+            type="date"
+            value={input.birthday}
+            onChange={handleChange}
+            className="dob-input"
+            name="birthday"
+            required
+          />
         </label>
       </form>
+      {inputErr.birthdayErr && <p>Choose a DOB</p>}
 
-      <button onClick={validate}>Submit</button>
+      <button className="mainbtn" onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
